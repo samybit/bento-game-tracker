@@ -17,7 +17,8 @@ export default function GameGrid({ games }: { games: Game[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 overflow-y-auto custom-scrollbar pr-2 h-[calc(100vh-250px)]">
+    // FIX 1: Changed h-[calc...] to h-full so it perfectly fits the parent bento box
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 overflow-y-auto custom-scrollbar pr-2 h-full pb-4">
       {games.map((game) => {
         const total = game.achievements.length;
         const completed = game.achievements.filter(a => a.completed).length;
@@ -25,13 +26,14 @@ export default function GameGrid({ games }: { games: Game[] }) {
         const isComplete = progress === 100;
 
         return (
-          <div key={game.id} className="bg-[#0a0a0a] border border-[#262626] rounded-xl p-5 flex flex-col hover:border-gray-600 transition-colors">
+          // FIX 2: Added h-[350px] to make all cards a uniform height, preventing row stretching
+          <div key={game.id} className="bg-[#0a0a0a] border border-[#262626] rounded-xl p-5 flex flex-col h-[350px] hover:border-gray-600 transition-colors">
 
             {/* Header */}
             <div className="flex justify-between items-start gap-3 mb-4">
               <div className="flex items-center gap-3 overflow-hidden">
                 {game.imageUrl && (
-                  <img src={game.imageUrl} alt={game.title} className="w-10 h-10 rounded-md object-cover border border-gray-800" />
+                  <img src={game.imageUrl} alt={game.title} className="w-10 h-10 rounded-md object-cover border border-gray-800 shrink-0" />
                 )}
                 <h3 className="font-bold text-gray-200 truncate" title={game.title}>{game.title}</h3>
               </div>
@@ -44,7 +46,7 @@ export default function GameGrid({ games }: { games: Game[] }) {
             </div>
 
             {/* Progress Bar */}
-            <div className="mb-4">
+            <div className="mb-4 shrink-0">
               <div className="flex justify-between text-xs mb-1 font-medium">
                 <span className="text-gray-500 uppercase tracking-wider">Completion</span>
                 <span className={isComplete ? 'text-[#10b981]' : 'text-[#8b5cf6]'}>{progress}%</span>
@@ -58,7 +60,8 @@ export default function GameGrid({ games }: { games: Game[] }) {
             </div>
 
             {/* Achievements List */}
-            <ul className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-2 max-h-48">
+            {/* FIX 3: Removed max-h-48. flex-1 allows it to dynamically fill the rest of the 350px card! */}
+            <ul className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-2">
               {game.achievements.map((ach) => (
                 <li
                   key={ach.id}
@@ -72,7 +75,8 @@ export default function GameGrid({ games }: { games: Game[] }) {
                       <Circle className="w-4 h-4 text-gray-600 group-hover:text-[#8b5cf6] transition-colors" />
                     )}
                   </div>
-                  <span className={`text-sm select-none transition-colors ${ach.completed ? 'text-gray-600 line-through' : 'text-gray-300 group-hover:text-gray-100'}`}>
+                  {/* Added break-words and leading-snug so long tasks wrap beautifully */}
+                  <span className={`text-sm select-none transition-colors leading-snug break-words ${ach.completed ? 'text-gray-600 line-through' : 'text-gray-300 group-hover:text-gray-100'}`}>
                     {ach.name}
                   </span>
                 </li>

@@ -89,7 +89,8 @@ export default function AddGameForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="flex-1 bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#8b5cf6]"
+          // Added 'min-w-0' to force the input to respect the flex boundaries
+          className="flex-1 min-w-0 bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#8b5cf6]"
         />
       </div>
 
