@@ -11,6 +11,26 @@ export default function AddGameForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
+  // --- Listen for AI filling the form ---
+  useEffect(() => {
+    const handleFill = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setAchievements(customEvent.detail);
+
+      // flash a success color on the textarea
+      const textarea = document.getElementById('achievements-input');
+      if (textarea) {
+        textarea.classList.add('border-[#10b981]', 'bg-[#10b981]/10');
+        setTimeout(() => {
+          textarea.classList.remove('border-[#10b981]', 'bg-[#10b981]/10');
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('fill-achievements', handleFill);
+    return () => window.removeEventListener('fill-achievements', handleFill);
+  }, []);
+
   // Debounced search for CheapShark thumbnail
   useEffect(() => {
     if (title.length < 3) {
@@ -74,6 +94,7 @@ export default function AddGameForm() {
       </div>
 
       <textarea
+        id="achievements-input"
         placeholder="Paste achievements (one per line)...&#10;Press Ctrl+Enter to save"
         value={achievements}
         onChange={(e) => setAchievements(e.target.value)}

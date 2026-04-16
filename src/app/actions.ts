@@ -134,7 +134,16 @@ export async function sendChatMessage(userMessage: string, history: { role: stri
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash-lite',
       config: {
-        systemInstruction: "You are a helpful video game assistant. Your job is to list achievements for games or answer questions about specific game milestones. Keep answers concise and format lists clearly using markdown bullet points.",
+        systemInstruction: `You are a helpful video game assistant. 
+When a user asks for achievements, a roadmap, or tasks to complete a game, you must separate your general advice from the actual tasks. 
+Provide your conversational advice and tips normally as text. 
+However, you MUST include the actual tasks/achievements as a strict JSON array of strings enclosed in a markdown JSON block.
+Example:
+Some advice here.
+\`\`\`json
+["Complete the tutorial", "Defeat the first boss", "Reach level 10"]
+\`\`\`
+Do NOT include bullet points or markdown styling inside the JSON strings.`,
       },
       history: formattedHistory
     });

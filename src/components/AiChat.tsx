@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { sendChatMessage } from '@/app/actions';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, ArrowLeftSquare } from 'lucide-react';
 
 type Message = {
   role: 'user' | 'model';
@@ -15,20 +15,24 @@ export default function AiChat() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
 
-  // Simple markdown parser replicating your vanilla JS logic
   const parseMarkdown = (text: string) => {
     let formatted = text.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-gray-100">$1</span>');
     formatted = formatted.replace(/\n[\*\-]\s/g, '<br><span class="text-[#8b5cf6] inline-block mt-2 mr-2 font-bold">•</span>');
     formatted = formatted.replace(/^[\*\-]\s/g, '<span class="text-[#8b5cf6] inline-block mr-2 font-bold">•</span>');
     formatted = formatted.replace(/\n/g, '<br>');
     return { __html: formatted };
+  };
+
+  // Dispatch an event to the AddGameForm component
+  const handleFillForm = (tasks: string[]) => {
+    const formattedTasks = tasks.join('\n');
+    window.dispatchEvent(new CustomEvent('fill-achievements', { detail: formattedTasks }));
   };
 
   async function handleSubmit(e: React.FormEvent) {
@@ -39,11 +43,9 @@ export default function AiChat() {
     setInput('');
     setIsLoading(true);
 
-    // Add user message immediately
     const newMessages: Message[] = [...messages, { role: 'user', content: userText }];
     setMessages(newMessages);
 
-    // Send to Server Action
     const result = await sendChatMessage(userText, messages);
 
     setIsLoading(false);
@@ -57,39 +59,81 @@ export default function AiChat() {
 
   return (
     <div className="flex flex-col h-full w-full">
-      {/* Chat History */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4"
-      >
+      <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="h-full flex items-center justify-center text-gray-500 text-sm text-center px-4">
             Ask me about achievements, game lore, or how to unlock specific milestones.
           </div>
         ) : (
-          messages.map((msg, idx) => (
-            <div key={idx} className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
-              {msg.role === 'model' && (
-                <div className="w-8 h-8 rounded-full bg-[#10b981] flex items-center justify-center shrink-0">
-                  <Bot className="w-5 h-5 text-[#0a0a0a]" />
-                </div>
-              )}
+          messages.map((msg, idx) => {
+            // --- NEW: Extract JSON block if it exists ---
+            let textContent = msg.content;
+            let extractedTasks: string[] = [];
 
-              <div
-                className={`p-3 text-sm rounded-lg max-w-[85%] ${msg.role === 'user'
-                    ? 'bg-[#8b5cf6] text-white rounded-tr-none'
-                    : 'bg-[#1a1a1a] border border-[#262626] text-gray-300 rounded-tl-none'
-                  }`}
-                dangerouslySetInnerHTML={parseMarkdown(msg.content)}
-              />
+            if (msg.role === 'model') {
+              const jsonMatch = textContent.match(/```json\s*([\s\S]*?)\s*```/);
+              if (jsonMatch) {
+                try {
+                  extractedTasks = JSON.parse(jsonMatch[1]);
+                  // Remove the JSON block from the readable text
+                  textContent = textContent.replace(jsonMatch[0], '').trim();
+                } catch (e) {
+                  console.error("Failed to parse AI JSON", e);
+                }
+              }
+            }
 
-              {msg.role === 'user' && (
-                <div className="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center shrink-0">
-                  <User className="w-5 h-5 text-white" />
+            return (
+              <div key={idx} className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+                {msg.role === 'model' && (
+                  <div className="w-8 h-8 rounded-full bg-[#10b981] flex items-center justify-center shrink-0">
+                    <Bot className="w-5 h-5 text-[#0a0a0a]" />
+                  </div>
+                )}
+
+                <div className={`flex flex-col gap-2 max-w-[85%]`}>
+                  {/* Normal Text Chat Bubble */}
+                  {textContent && (
+                    <div
+                      className={`p-3 text-sm rounded-lg ${msg.role === 'user'
+                          ? 'bg-[#8b5cf6] text-white rounded-tr-none'
+                          : 'bg-[#1a1a1a] border border-[#262626] text-gray-300 rounded-tl-none'
+                        }`}
+                      dangerouslySetInnerHTML={parseMarkdown(textContent)}
+                    />
+                  )}
+
+                  {/* Interactive Tasks UI Card */}
+                  {extractedTasks.length > 0 && (
+                    <div className="bg-[#121212] border border-[#262626] rounded-lg p-3 mt-1 shadow-md">
+                      <div className="text-xs text-gray-400 mb-2 uppercase tracking-wider font-semibold">Suggested Tasks</div>
+                      <ul className="text-sm text-gray-300 mb-3 space-y-1">
+                        {extractedTasks.slice(0, 3).map((task, i) => (
+                          <li key={i} className="flex gap-2"><span className="text-[#8b5cf6]">•</span> {task}</li>
+                        ))}
+                        {extractedTasks.length > 3 && (
+                          <li className="text-xs text-gray-500 italic ml-4">+ {extractedTasks.length - 3} more</li>
+                        )}
+                      </ul>
+                      <button
+                        onClick={() => handleFillForm(extractedTasks)}
+                        className="w-full flex items-center justify-center gap-2 bg-[#262626] hover:bg-[#333] text-[#10b981] py-1.5 rounded-md text-sm font-medium transition-colors border border-[#333]"
+                      >
+                        <ArrowLeftSquare className="w-4 h-4" />
+                        Send to Form
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))
+
+                {msg.role === 'user' && (
+                  <div className="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center shrink-0">
+                    <User className="w-5 h-5 text-white" />
+                  </div>
+                )}
+              </div>
+            );
+          })
         )}
 
         {isLoading && (
@@ -104,14 +148,13 @@ export default function AiChat() {
         )}
       </div>
 
-      {/* Input Area */}
       <form onSubmit={handleSubmit} className="p-3 border-t border-[#262626] bg-[#0a0a0a]">
         <div className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Gemini..."
+            placeholder="Ask Gemini for a roadmap..."
             disabled={isLoading}
             className="flex-1 bg-transparent border border-[#262626] rounded-lg px-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#8b5cf6] disabled:opacity-50"
           />
