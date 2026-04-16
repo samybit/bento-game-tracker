@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { Gamepad2, Sparkles, PlusCircle } from "lucide-react";
 import AddGameForm from '@/components/AddGameForm';
 import GameGrid from '@/components/GameGrid';
+import AiChat from '@/components/AiChat';
 
 export default async function Home() {
   // Server-side data fetch
@@ -39,13 +40,13 @@ export default async function Home() {
           </section>
 
           {/* AI Chat Bento Card */}
-          <section className="bento-card flex-1 flex flex-col min-h-0">
-            <div className="flex items-center gap-2 mb-4 text-gray-300">
+          <section className="bento-card flex-1 flex flex-col min-h-0 p-0 overflow-hidden">
+            <div className="flex items-center gap-2 p-4 pb-0 text-gray-300">
               <Sparkles className="w-5 h-5 text-[#8b5cf6]" />
               <h2 className="font-semibold">Gemini Assistant</h2>
             </div>
-            <div className="flex-1 border border-dashed border-[#262626] rounded-xl flex items-center justify-center text-sm text-gray-500">
-              [Phase 4: AI Chat Component Pending]
+            <div className="flex-1 overflow-hidden">
+              <AiChat />
             </div>
           </section>
 

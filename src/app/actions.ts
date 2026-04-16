@@ -2,6 +2,10 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { GoogleGenAI } from '@google/genai';
+
+// Initialize the client.
+const ai = new GoogleGenAI({});
 
 // --- CheapShark API Integration ---
 export async function searchGameImage(query: string): Promise<string | null> {
@@ -113,5 +117,33 @@ export async function toggleAchievement(id: number, currentStatus: boolean) {
   } catch (error) {
     console.error("Update Error:", error);
     return { error: "Failed to update achievement" };
+  }
+}
+
+// --- Gemini AI Chat Action ---
+export async function sendChatMessage(userMessage: string, history: { role: string, content: string }[]) {
+  if (!userMessage) return { error: "Message is required" };
+
+  try {
+    // Map the simple history array to the format expected by the SDK
+    const formattedHistory = history.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }]
+    }));
+
+    const chat = ai.chats.create({
+      model: 'gemini-2.5-flash-lite',
+      config: {
+        systemInstruction: "You are a helpful video game assistant. Your job is to list achievements for games or answer questions about specific game milestones. Keep answers concise and format lists clearly using markdown bullet points.",
+      },
+      history: formattedHistory
+    });
+
+    const response = await chat.sendMessage({ message: userMessage });
+
+    return { reply: response.text };
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    return { error: "Failed to connect to the AI." };
   }
 }
