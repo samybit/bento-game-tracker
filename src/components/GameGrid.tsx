@@ -18,7 +18,7 @@ export default function GameGrid({ games }: { games: Game[] }) {
 
   return (
     // FIX 1: Changed h-[calc...] to h-full so it perfectly fits the parent bento box
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 overflow-y-auto custom-scrollbar pr-2 h-full pb-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 2xl:grid-cols-3 gap-4 overflow-y-auto custom-scrollbar pr-2 h-full pb-4">
       {games.map((game) => {
         const total = game.achievements.length;
         const completed = game.achievements.filter(a => a.completed).length;
