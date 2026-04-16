@@ -3,6 +3,20 @@ import { Gamepad2, Sparkles, PlusCircle, Trophy } from "lucide-react";
 import AddGameForm from '@/components/AddGameForm';
 import GameGrid from '@/components/GameGrid';
 import AiChat from '@/components/AiChat';
+import { Metadata } from 'next';
+
+// This function makes the tab title dynamic
+export async function generateMetadata(): Promise<Metadata> {
+  const lastGame = await prisma.game.findFirst({
+    orderBy: { updatedAt: 'desc' },
+    select: { title: true }
+  });
+
+  return {
+    title: lastGame ? `Nexus Board | ${lastGame.title}` : 'Nexus Board | Game Tracker',
+    description: 'Bento-styled game completion board',
+  };
+}
 
 export default async function Home() {
   const games = await prisma.game.findMany({
