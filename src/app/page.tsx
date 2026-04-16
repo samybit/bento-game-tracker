@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { Gamepad2, Sparkles, PlusCircle } from "lucide-react";
+import { Gamepad2, Sparkles, PlusCircle, Trophy } from "lucide-react";
 import AddGameForm from '@/components/AddGameForm';
 import GameGrid from '@/components/GameGrid';
 import AiChat from '@/components/AiChat';
@@ -48,12 +48,17 @@ export default async function Home() {
         {/* Column 3: Game Tracker */}
         <section className="bento-card lg:col-span-12 xl:col-span-5 flex flex-col min-h-0">
           <div className="flex items-center justify-between mb-6 shrink-0">
-            <h2 className="font-semibold text-gray-300">Completion Tracker</h2>
+            {/* Unique Icon and Title Group */}
+            <div className="flex items-center gap-2 text-gray-300">
+              <Trophy className="w-5 h-5 text-[#8b5cf6]" />
+              <h2 className="font-semibold">Completion Tracker</h2>
+            </div>
+
             <div className="text-sm text-gray-500 bg-[#0a0a0a] px-3 py-1 rounded-full border border-[#262626]">
               {games.length} Games
             </div>
           </div>
-          {/* This wrapper MUST have flex-1 and min-h-0 */}
+
           <div className="flex-1 min-h-0">
             <GameGrid games={games} />
           </div>
