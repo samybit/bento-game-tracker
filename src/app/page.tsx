@@ -1,65 +1,63 @@
-import Image from "next/image";
+// src/app/page.tsx
+import { Gamepad2, Sparkles, PlusCircle } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6">
+
+      {/* Header */}
+      <header className="flex items-center gap-3 px-2">
+        <div className="bg-[#8b5cf6] p-2 rounded-xl">
+          <Gamepad2 className="w-6 h-6 text-white" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-3xl font-bold tracking-tight">Nexus Board</h1>
+      </header>
+
+      {/* Bento Grid Container */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[calc(100vh-140px)] min-h-[800px]">
+
+        {/* Left Column: Form & Chat (4 cols) */}
+        <div className="md:col-span-4 flex flex-col gap-6 h-full">
+
+          {/* Add Game Bento Card */}
+          <section className="bento-card flex-none">
+            <div className="flex items-center gap-2 mb-4 text-gray-300">
+              <PlusCircle className="w-5 h-5 text-[#8b5cf6]" />
+              <h2 className="font-semibold">Add / Update Game</h2>
+            </div>
+            <div className="h-48 border border-dashed border-[#262626] rounded-xl flex items-center justify-center text-sm text-gray-500">
+              [Add Game Form Component]
+            </div>
+          </section>
+
+          {/* AI Chat Bento Card */}
+          <section className="bento-card flex-1 flex flex-col min-h-0">
+            <div className="flex items-center gap-2 mb-4 text-gray-300">
+              <Sparkles className="w-5 h-5 text-[#8b5cf6]" />
+              <h2 className="font-semibold">Gemini Assistant</h2>
+            </div>
+            <div className="flex-1 border border-dashed border-[#262626] rounded-xl flex items-center justify-center text-sm text-gray-500">
+              [AI Chat Component]
+            </div>
+          </section>
+
         </div>
-      </main>
-    </div>
+
+        {/* Right Column: Game Grid (8 cols) */}
+        <section className="md:col-span-8 bento-card flex flex-col min-h-0">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-semibold text-gray-300">Completion Tracker</h2>
+            <div className="text-sm text-gray-500">
+              [Filter/Sort Controls]
+            </div>
+          </div>
+
+          <div className="flex-1 border border-dashed border-[#262626] rounded-xl flex items-center justify-center text-sm text-gray-500">
+            [Game List Grid Component]
+          </div>
+        </section>
+
+      </div>
+    </main>
   );
 }
