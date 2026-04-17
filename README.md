@@ -6,9 +6,10 @@ A high-performance, Bento-styled game completion board designed for focused game
 
 - **Framework:** Next.js 16 (App Router)
 - **AI:** Gemini 2.5 Flash Lite
-- **Database:** SQLite via Prisma 7
-- **Styling:** Tailwind CSS v4 (Bento Design)
-- **State:** React Server Actions
+- **Animations:** Framer Motion (Hardware-accelerated) 
+- **Database:** PostgreSQL via Prisma 7
+- **Styling:** Tailwind CSS v4 (Bento Grid Design)
+- **State:** React Server Actions & Custom Browser Events
 
 ## 🚀 Getting Started
 
