@@ -30,7 +30,7 @@ export default async function Home() {
   // Render gatekeeper if no cookie exists
   if (!username) {
     return (
-      <main className="min-h-screen max-w-[1600px] mx-auto bg-transparent">
+      <main className="h-screen w-full bg-[#050505]">
         <LoginScreen />
       </main>
     );
