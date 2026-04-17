@@ -1,20 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, AlertCircle } from 'lucide-react';
 import { loginUser } from '@/app/actions';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!username.trim()) return;
+
+    // Custom Validation Logic
+    if (!username.trim()) {
+      setError('Identify yourself to access the board.');
+      return;
+    }
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      setError('No spaces or special characters allowed.');
+      return;
+    }
 
     setIsLoading(true);
     await loginUser(username);
-    // No need to setIsLoading(false) because the page will re-render from the server
   }
 
   return (
@@ -27,17 +37,36 @@ export default function LoginScreen() {
         <h1 className="text-3xl font-bold tracking-tight mb-2 text-gray-100">Nexus Board</h1>
         <p className="text-gray-400 mb-8">Enter a unique username to access your personal completion tracker.</p>
 
-        <form onSubmit={handleLogin} className="w-full flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Username..."
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            pattern="[a-zA-Z0-9_-]+"
-            title="Only letters, numbers, underscores, and dashes allowed."
-            className="w-full bg-[#0a0a0a] border border-[#262626] rounded-xl px-4 py-3 text-gray-200 focus:outline-none focus:border-[#6189ff] text-center text-lg"
-          />
+        {/* Added noValidate to disable browser popups */}
+        <form onSubmit={handleLogin} noValidate className="w-full flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              placeholder="Username..."
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                if (error) setError(''); // Clear error when user types
+              }}
+              className={`w-full bg-[#0a0a0a] border ${error ? 'border-red-500' : 'border-[#262626] focus:border-[#6189ff]'} rounded-xl px-4 py-3 text-gray-200 focus:outline-none text-center text-lg transition-colors`}
+            />
+
+            {/* Animated Error Message */}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: -5 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -5 }}
+                  className="text-red-500 text-sm font-medium flex items-center justify-center gap-1 overflow-hidden"
+                >
+                  <AlertCircle className="w-4 h-4" />
+                  <span>{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <button
             type="submit"
             disabled={isLoading}

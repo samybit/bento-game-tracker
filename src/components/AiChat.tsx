@@ -161,7 +161,7 @@ export default function AiChat() {
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-[#6189ff] hover:bg-[#4a72ff] text-white p-2 rounded-lg transition-colors disabled:opacity-50 shrink-0 flex items-center justify-center w-10"
+            className="bg-[#6189ff] hover:bg-[#5179ef] text-white p-2 rounded-lg transition-colors disabled:opacity-50 shrink-0 flex items-center justify-center w-10"
           >
             <Send className="w-4 h-4" />
           </button>
