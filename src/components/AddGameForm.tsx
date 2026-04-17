@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { searchGameImage, addOrUpdateGame } from '@/app/actions';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 
@@ -15,8 +16,6 @@ export default function AddGameForm() {
   // Error States
   const [titleError, setTitleError] = useState('');
   const [achError, setAchError] = useState('');
-
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   // --- Listen for AI filling the form ---
   useEffect(() => {
@@ -40,22 +39,27 @@ export default function AddGameForm() {
 
   // Debounced search for CheapShark thumbnail
   useEffect(() => {
+    let active = true;
+
     if (title.length < 3) {
       setThumbnailUrl(null);
+      setIsSearching(false);
       return;
     }
 
     setIsSearching(true);
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
 
-    debounceTimer.current = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       const url = await searchGameImage(title);
-      setThumbnailUrl(url);
-      setIsSearching(false);
+      if (active) {
+        setThumbnailUrl(url);
+        setIsSearching(false);
+      }
     }, 500);
 
     return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      active = false;
+      clearTimeout(timer);
     };
   }, [title]);
 
@@ -92,11 +96,11 @@ export default function AddGameForm() {
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-1.5 shrink-0">
         <div className="flex gap-3">
-          <div className="w-14 h-14 shrink-0 rounded-lg border border-[#262626] bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
+          <div className="w-14 h-14 shrink-0 rounded-lg border border-[#262626] bg-[#0a0a0a] overflow-hidden flex items-center justify-center relative">
             {isSearching ? (
               <span className="text-xs text-gray-500 animate-pulse">...</span>
             ) : thumbnailUrl ? (
-              <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+              <Image src={thumbnailUrl} alt="Thumbnail" fill className="object-cover" unoptimized />
             ) : (
               <span className="text-xs text-gray-700">Img</span>
             )}

@@ -29,15 +29,21 @@ export async function searchGameImage(query: string): Promise<string | null> {
   try {
     const url = `https://www.cheapshark.com/api/1.0/games?title=${encodeURIComponent(query)}&limit=1`;
     const res = await fetch(url);
+
+    if (!res.ok) {
+      console.error(`CheapShark API error: ${res.status} ${res.statusText}`);
+      return null;
+    }
+
     const data = await res.json();
 
-    if (data && data.length > 0) {
+    if (Array.isArray(data) && data.length > 0) {
       let imgUrl = data[0].thumb;
       // FIX: CheapShark sometimes forgets the 'https:' part of the UR
       if (imgUrl && imgUrl.startsWith('//')) {
         imgUrl = 'https:' + imgUrl;
       }
-      return imgUrl;
+      return imgUrl || null;
     }
   } catch (error) {
     console.error("Error fetching from CheapShark:", error);
