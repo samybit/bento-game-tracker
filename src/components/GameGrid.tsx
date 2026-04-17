@@ -48,11 +48,11 @@ export default function GameGrid({ games }: { games: Game[] }) {
             <div className="mb-4 shrink-0">
               <div className="flex justify-between text-xs mb-1 font-medium">
                 <span className="text-gray-500 uppercase tracking-wider">Completion</span>
-                <span className={isComplete ? 'text-[#10b981]' : 'text-[#8b5cf6]'}>{progress}%</span>
+                <span className={isComplete ? 'text-[#10b981]' : 'text-[#6189ff]'}>{progress}%</span>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-[#10b981]' : 'bg-[#8b5cf6]'}`}
+                  className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-[#10b981]' : 'bg-[#6189ff]'}`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -71,7 +71,7 @@ export default function GameGrid({ games }: { games: Game[] }) {
                     {ach.completed ? (
                       <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
                     ) : (
-                      <Circle className="w-4 h-4 text-gray-600 group-hover:text-[#8b5cf6] transition-colors" />
+                      <Circle className="w-4 h-4 text-gray-600 group-hover:text-[#6189ff] transition-colors" />
                     )}
                   </div>
                   {/* Added break-words and leading-snug so long tasks wrap beautifully */}

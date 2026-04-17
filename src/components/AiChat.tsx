@@ -23,8 +23,8 @@ export default function AiChat() {
 
   const parseMarkdown = (text: string) => {
     let formatted = text.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-gray-100">$1</span>');
-    formatted = formatted.replace(/\n[\*\-]\s/g, '<br><span class="text-[#8b5cf6] inline-block mt-2 mr-2 font-bold">•</span>');
-    formatted = formatted.replace(/^[\*\-]\s/g, '<span class="text-[#8b5cf6] inline-block mr-2 font-bold">•</span>');
+    formatted = formatted.replace(/\n[\*\-]\s/g, '<br><span class="text-[#6189ff] inline-block mt-2 mr-2 font-bold">•</span>');
+    formatted = formatted.replace(/^[\*\-]\s/g, '<span class="text-[#6189ff] inline-block mr-2 font-bold">•</span>');
     formatted = formatted.replace(/\n/g, '<br>');
     return { __html: formatted };
   };
@@ -96,7 +96,7 @@ export default function AiChat() {
                   {textContent && (
                     <div
                       className={`p-3 text-sm rounded-lg ${msg.role === 'user'
-                          ? 'bg-[#8b5cf6] text-white rounded-tr-none'
+                          ? 'bg-[#6189ff] text-white rounded-tr-none'
                           : 'bg-[#1a1a1a] border border-[#262626] text-gray-300 rounded-tl-none'
                         }`}
                       dangerouslySetInnerHTML={parseMarkdown(textContent)}
@@ -109,7 +109,7 @@ export default function AiChat() {
                       <div className="text-xs text-gray-400 mb-2 uppercase tracking-wider font-semibold">Suggested Tasks</div>
                       <ul className="text-sm text-gray-300 mb-3 space-y-1">
                         {extractedTasks.slice(0, 3).map((task, i) => (
-                          <li key={i} className="flex gap-2"><span className="text-[#8b5cf6]">•</span> {task}</li>
+                          <li key={i} className="flex gap-2"><span className="text-[#6189ff]">•</span> {task}</li>
                         ))}
                         {extractedTasks.length > 3 && (
                           <li className="text-xs text-gray-500 italic ml-4">+ {extractedTasks.length - 3} more</li>
@@ -127,7 +127,7 @@ export default function AiChat() {
                 </div>
 
                 {msg.role === 'user' && (
-                  <div className="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#6189ff] flex items-center justify-center shrink-0">
                     <User className="w-5 h-5 text-white" />
                   </div>
                 )}
@@ -156,12 +156,12 @@ export default function AiChat() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Gemini for a roadmap..."
             disabled={isLoading}
-            className="flex-1 bg-transparent border border-[#262626] rounded-lg px-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#8b5cf6] disabled:opacity-50"
+            className="flex-1 bg-transparent border border-[#262626] rounded-lg px-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#6189ff] disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white p-2 rounded-lg transition-colors disabled:opacity-50 shrink-0 flex items-center justify-center w-10"
+            className="bg-[#6189ff] hover:bg-[#4a72ff] text-white p-2 rounded-lg transition-colors disabled:opacity-50 shrink-0 flex items-center justify-center w-10"
           >
             <Send className="w-4 h-4" />
           </button>

@@ -90,7 +90,7 @@ export default function AddGameForm() {
           onChange={(e) => setTitle(e.target.value)}
           required
           // Added 'min-w-0' to force the input to respect the flex boundaries
-          className="flex-1 min-w-0 bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#8b5cf6]"
+          className="flex-1 min-w-0 bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#6189ff]"
         />
       </div>
 
@@ -105,13 +105,13 @@ export default function AddGameForm() {
           }
         }}
         required
-        className="flex-1 resize-none bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#8b5cf6] custom-scrollbar"
+        className="flex-1 resize-none bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-[#6189ff] custom-scrollbar"
       />
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-semibold py-2 rounded-lg transition-colors disabled:opacity-50"
+        className="bg-[#6189ff] hover:bg-[#4a72ff] text-white font-semibold py-2 rounded-lg transition-colors disabled:opacity-50"
       >
         {isSubmitting ? 'Saving...' : 'Save Game Info'}
       </button>
