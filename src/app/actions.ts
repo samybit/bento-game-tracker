@@ -28,7 +28,16 @@ export async function searchGameImage(query: string): Promise<string | null> {
 
   try {
     const url = `https://www.cheapshark.com/api/1.0/games?title=${encodeURIComponent(query)}&limit=1`;
-    const res = await fetch(url);
+
+    // Add a real browser User-Agent to prevent AWS/Vercel from being blocked
+    // Add cache: 'no-store' to prevent Next.js from caching a failed request
+    const res = await fetch(url, {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
+      cache: 'no-store'
+    });
 
     if (!res.ok) {
       console.error(`CheapShark API error: ${res.status} ${res.statusText}`);
@@ -39,11 +48,16 @@ export async function searchGameImage(query: string): Promise<string | null> {
 
     if (Array.isArray(data) && data.length > 0) {
       let imgUrl = data[0].thumb;
-      // FIX: CheapShark sometimes forgets the 'https:' part of the UR
-      if (imgUrl && imgUrl.startsWith('//')) {
-        imgUrl = 'https:' + imgUrl;
+
+      if (imgUrl) {
+        // Force HTTPS. Handle both '//' protocols and explicit 'http://' protocols
+        if (imgUrl.startsWith('//')) {
+          imgUrl = 'https:' + imgUrl;
+        } else if (imgUrl.startsWith('http://')) {
+          imgUrl = imgUrl.replace(/^http:\/\//i, 'https://');
+        }
+        return imgUrl;
       }
-      return imgUrl || null;
     }
   } catch (error) {
     console.error("Error fetching from CheapShark:", error);
