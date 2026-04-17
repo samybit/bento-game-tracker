@@ -60,7 +60,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
           const isComplete = progress === 100;
 
           // Extracted Header Component for cleaner rendering
-          const CardHeader = () => (
+          const headerContent = (
             <div className="flex justify-between items-start gap-3 mb-4 shrink-0 h-10">
               <div className="flex items-center gap-3 overflow-hidden">
                 {!isExpanded && game.imageUrl && (
@@ -129,7 +129,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
                   )}
 
                   <div className="p-4 flex flex-col flex-1 min-h-0">
-                    <CardHeader />
+                    {headerContent}
 
                     <div className="mb-4 shrink-0">
                       <div className="flex justify-between text-xs mb-1 font-medium">
@@ -157,7 +157,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
                 </>
               ) : (
                 <>
-                  <CardHeader />
+                  {headerContent}
 
                   <div className="mb-4 shrink-0">
                     <div className="flex justify-between text-xs mb-1 font-medium">
