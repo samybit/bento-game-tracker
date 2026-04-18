@@ -106,7 +106,7 @@ export default function LoginScreen() {
       </div>
 
       {/* Main Login Card */}
-      <div className="bento-card max-w-md w-full flex flex-col items-center text-center p-8 relative z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border border-[#262626] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+      <div className="bento-card max-w-md w-full flex flex-col items-center text-center p-6 md:p-8 relative z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border border-[#262626] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
 
         {/* Gamepad Container */}
         <div className="bg-[#6189ff] p-4 rounded-2xl mb-6 shadow-[0_0_30px_rgba(97,137,255,0.4)] relative z-20">

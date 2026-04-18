@@ -17,7 +17,7 @@ body {
 
 /* Tailwind v4 uses @utility instead of @layer utilities */
 @utility bento-card {
-  @apply bg-[var(--bento-bg)] border border-[var(--bento-border)] rounded-2xl p-6 shadow-lg transition-all duration-300;
+  @apply bg-[var(--bento-bg)] border border-[var(--bento-border)] rounded-2xl p-4 md:p-6 shadow-lg transition-all duration-300;
 }
 
 @utility custom-scrollbar {

@@ -51,7 +51,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
   }
 
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 h-full overflow-y-auto custom-scrollbar pr-2 pb-4 content-start ${isExpanded ? 'lg:grid-cols-3 xl:grid-cols-4' : 'xl:grid-cols-2 2xl:grid-cols-3'}`}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 h-full overflow-y-auto custom-scrollbar pr-2 pb-4 content-start ${isExpanded ? 'lg:grid-cols-3 xl:grid-cols-4' : 'xl:grid-cols-2 2xl:grid-cols-3'}`}>
       <AnimatePresence mode="popLayout">
         {games.map((game) => {
           const total = game.achievements.length;
@@ -116,7 +116,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
               initial="hidden"
               animate="visible"
               exit="exit"
-              className={`bg-[#0a0a0a] border border-[#262626] rounded-xl flex flex-col hover:border-gray-600 transition-colors ${isExpanded ? 'h-[400px]' : 'h-[350px] p-5'}`}
+              className={`bg-[#0a0a0a] border border-[#262626] rounded-xl flex flex-col hover:border-gray-600 transition-colors ${isExpanded ? 'h-[400px]' : 'h-[320px] md:h-[350px] p-4 md:p-5'}`}
             >
               {isExpanded ? (
                 <>

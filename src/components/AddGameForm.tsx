@@ -139,7 +139,7 @@ export default function AddGameForm() {
               exit={{ opacity: 0, height: 0, y: -10 }}
               className="overflow-hidden"
             >
-              <div className="pt-2 pb-1 grid grid-cols-2 gap-2">
+              <div className="pt-2 pb-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {isLoadingSuggestions ? (
                   <div className="col-span-2 text-xs text-gray-500 text-center py-2">Scanning network...</div>
                 ) : (

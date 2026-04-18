@@ -10,7 +10,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
   const username = cookieStore.get('nexus_user')?.value;
 
-  if (!username) return { title: 'Nexus Board | Login' };
+  // Unauthenticated users (and social scrapers like Upwork) see this rich metadata
+  if (!username) {
+    return {
+      title: 'Nexus Board | Login',
+      openGraph: {
+        title: 'Nexus Board | Master Your Backlog',
+        description: 'A high-performance, Bento-styled game completion board powered by Gemini AI.',
+        url: 'https://nexus-board.vercel.app',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Nexus Board | Master Your Backlog',
+        description: 'A high-performance, Bento-styled game completion board powered by Gemini AI.',
+      }
+    };
+  }
 
   const lastGame = await prisma.game.findFirst({
     where: { username },
@@ -18,8 +33,22 @@ export async function generateMetadata(): Promise<Metadata> {
     select: { title: true }
   });
 
+  const pageTitle = lastGame ? `Nexus | ${lastGame.title}` : `Nexus Board | ${username}`;
+  const pageDesc = `Check out @${username}'s gaming backlog and completion roadmap on Nexus Board.`;
+
   return {
-    title: lastGame ? `Nexus | ${lastGame.title}` : `Nexus Board | ${username}`,
+    title: pageTitle,
+    description: pageDesc,
+    openGraph: {
+      title: pageTitle,
+      description: pageDesc,
+      url: 'https://nexus-board.vercel.app',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDesc,
+    }
   };
 }
 
@@ -44,18 +73,18 @@ export default async function Home() {
   });
 
   return (
-    <main className="h-screen overflow-hidden p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto flex flex-col gap-6">
+    <main className="min-h-screen lg:h-screen lg:overflow-hidden p-3 sm:p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto flex flex-col gap-4 md:gap-6">
 
-      <header className="flex items-center justify-between px-2 shrink-0">
+      <header className="flex flex-wrap items-center justify-between px-1 md:px-2 shrink-0 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-[#6189ff] p-2 rounded-xl">
-            <Gamepad2 className="w-6 h-6 text-white" />
+          <div className="bg-[#6189ff] p-1.5 md:p-2 rounded-xl shrink-0">
+            <Gamepad2 className="w-5 h-5 md:w-6 md:h-6 text-white" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">Nexus Board</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">Nexus Board</h1>
         </div>
 
         {/* User Info & Logout Button */}
-        <div className="flex items-center gap-4 bg-[#121212] border border-[#262626] rounded-xl p-1.5 pr-4">
+        <div className="flex items-center gap-3 md:gap-4 bg-[#121212] border border-[#262626] rounded-xl p-1.5 pr-3 md:pr-4">
           <div className="bg-[#0a0a0a] px-3 py-1.5 rounded-lg border border-[#262626] text-sm text-gray-300 font-medium">
             @{username}
           </div>

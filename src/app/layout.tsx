@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     template: '%s | Nexus Board'
   },
   description: 'A high-performance, Bento-styled game completion board powered by Gemini AI. Track achievements and generate roadmaps.',
+  applicationName: 'Nexus Board',
+  authors: [{ name: 'Samy' }],
+  creator: 'Samy',
+  publisher: 'Nexus Board',
+  formatDetection: { telephone: false },
 
   // Open Graph (Discord, Facebook, LinkedIn, WhatsApp)
   openGraph: {
@@ -36,8 +41,20 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nexus Board',
     description: 'Master your backlog with intelligence and style.',
+    creator: '@samy',
   },
 
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   // Keywords for search engines
   keywords: ['gaming', 'backlog', 'achievements', 'tracker', 'nextjs', 'bento grid'],
 };
