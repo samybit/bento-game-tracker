@@ -199,3 +199,30 @@ Do NOT include bullet points or markdown styling inside the JSON strings.`,
     return { error: "Failed to connect to the AI." };
   }
 }
+
+
+export async function getTrendingGames(): Promise<string[]> {
+  try {
+    // Fetch top 100 played games in the last 2 weeks (Zero auth required)
+    const res = await fetch('https://steamspy.com/api.php?request=top100in2weeks', {
+      next: { revalidate: 86400 } // Cache for 24 hour to prevent API spam
+    });
+
+    if (!res.ok) return [];
+
+    const data = await res.json();
+
+    // SteamSpy returns an object with AppIDs as keys, so we convert to an array
+    const gamesArray = Object.values(data) as { name: string }[];
+
+    // Shuffle the array and pick the top 4
+    const shuffled = gamesArray.sort(() => 0.5 - Math.random());
+    const suggestions = shuffled.slice(0, 4).map(game => game.name);
+
+    return suggestions;
+  } catch (error) {
+    console.error("Error fetching trending games:", error);
+    // Silent fallback if API fails
+    return ['Elden Ring', 'Cyberpunk 2077', 'Helldivers 2', 'Baldur\'s Gate 3'];
+  }
+}
