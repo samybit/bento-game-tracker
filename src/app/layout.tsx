@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nexus-board.vercel.app'),
+  metadataBase: new URL('https://bento-game-tracker.vercel.app'),
 
   title: {
     default: 'Nexus Board | Master Your Backlog',
     template: '%s | Nexus Board'
   },
-  description: 'A high-performance, Bento-styled game completion board powered by Gemini AI. Track achievements and generate roadmaps.',
+  description: 'A high-performance, Bento-styled game completion board designed for focused gamers. Powered by Gemini AI to track achievements, generate intelligent roadmaps, and master your gaming backlog.',
   applicationName: 'Nexus Board',
   authors: [{ name: 'Samy' }],
   creator: 'Samy',
@@ -29,19 +29,28 @@ export const metadata: Metadata = {
   // Open Graph (Discord, Facebook, LinkedIn, WhatsApp)
   openGraph: {
     title: 'Nexus Board',
-    description: 'Master your backlog with intelligence and style.',
-    url: 'https://nexus-board.vercel.app',
+    description: 'A high-performance, Bento-styled game completion board designed for focused gamers. Powered by Gemini AI to track achievements, generate intelligent roadmaps, and master your gaming backlog.',
+    url: 'https://bento-game-tracker.vercel.app',
     siteName: 'Nexus Board',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Nexus Board Game Tracker Preview',
+      },
+    ],
   },
 
   // Twitter / X
   twitter: {
     card: 'summary_large_image',
     title: 'Nexus Board',
-    description: 'Master your backlog with intelligence and style.',
+    description: 'A high-performance, Bento-styled game completion board designed for focused gamers. Powered by Gemini AI to track achievements, generate intelligent roadmaps, and master your gaming backlog.',
     creator: '@samy',
+    images: ['/og-image.png'],
   },
 
   robots: {
