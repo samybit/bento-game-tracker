@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://bento-game-tracker.vercel.app/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Nexus Board Game Tracker Preview',
+        alt: 'Nexus Board Preview',
       },
     ],
   },
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     title: 'Nexus Board',
     description: 'A high-performance, Bento-styled game completion board designed for focused gamers. Powered by Gemini AI to track achievements, generate intelligent roadmaps, and master your gaming backlog.',
     creator: '@samy',
-    images: ['/og-image.png'],
+    images: ['https://bento-game-tracker.vercel.app/og-image.png'],
   },
 
   robots: {
