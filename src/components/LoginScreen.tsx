@@ -66,15 +66,6 @@ export default function LoginScreen() {
             <pattern id="blueprint-grid-desktop" width="60" height="60" patternUnits="userSpaceOnUse">
               <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
             </pattern>
-
-            <filter id="glow-strong-desktop" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="8" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-            <filter id="glow-subtle-desktop" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
           </defs>
 
           {/* Grid Background */}
@@ -106,9 +97,9 @@ export default function LoginScreen() {
               <motion.path
                 d={p.d}
                 stroke={p.color}
-                strokeWidth="6"
+                strokeWidth="8"
+                strokeOpacity="0.4"
                 fill="none"
-                filter="url(#glow-strong-desktop)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
@@ -125,7 +116,6 @@ export default function LoginScreen() {
                 stroke="#ffffff"
                 strokeWidth="2"
                 fill="none"
-                filter="url(#glow-subtle-desktop)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.05, pathOffset: 0, opacity: 0 }}
@@ -145,14 +135,6 @@ export default function LoginScreen() {
             <pattern id="blueprint-grid-mobile" width="40" height="40" patternUnits="userSpaceOnUse">
               <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
             </pattern>
-            <filter id="glow-strong-mobile" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-            <filter id="glow-subtle-mobile" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="2" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
           </defs>
 
           <rect width="100%" height="100%" fill="url(#blueprint-grid-mobile)" />
@@ -179,9 +161,9 @@ export default function LoginScreen() {
               <motion.path
                 d={p.d}
                 stroke={p.color}
-                strokeWidth="6"
+                strokeWidth="8"
+                strokeOpacity="0.4"
                 fill="none"
-                filter="url(#glow-strong-mobile)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
@@ -197,7 +179,6 @@ export default function LoginScreen() {
                 stroke="#ffffff"
                 strokeWidth="2"
                 fill="none"
-                filter="url(#glow-subtle-mobile)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.05, pathOffset: 0, opacity: 0 }}
