@@ -55,27 +55,30 @@ export default function LoginScreen() {
       {/* Dynamic Energy Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
         <svg className="w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="8" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* DESKTOP PATHS (Hidden on mobile, visible on md and up) */}
+          {/* DESKTOP PATHS */}
           <g className="hidden md:block">
             {desktopPaths.map((p, i) => (
               <g key={`desktop-${i}`}>
+                {/* Static background track */}
                 <path d={p.d} stroke="#262626" strokeWidth="1.5" fill="none" className="opacity-40" />
+
+                {/* 1. The Glow (Thick, semi-transparent) */}
                 <motion.path
                   d={p.d}
                   stroke="#6189ff"
-                  strokeWidth="3"
+                  strokeWidth="12"
                   fill="none"
-                  filter="url(#neonGlow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  animate={{ pathOffset: 1, opacity: [0, 0.3, 0.3, 0] }}
+                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
+                />
+
+                {/* 2. The Core Line (Thin, bright) */}
+                <motion.path
+                  d={p.d}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                  fill="none"
                   initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
                   animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
                   transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
@@ -84,17 +87,30 @@ export default function LoginScreen() {
             ))}
           </g>
 
-          {/* MOBILE PATHS (Visible on mobile, hidden on md and up) */}
+          {/* MOBILE PATHS */}
           <g className="md:hidden">
             {mobilePaths.map((p, i) => (
               <g key={`mobile-${i}`}>
+                {/* Static background track */}
                 <path d={p.d} stroke="#262626" strokeWidth="1.5" fill="none" className="opacity-40" />
+
+                {/* 1. The Glow */}
                 <motion.path
                   d={p.d}
                   stroke="#6189ff"
-                  strokeWidth="3"
+                  strokeWidth="12"
                   fill="none"
-                  filter="url(#neonGlow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  animate={{ pathOffset: 1, opacity: [0, 0.3, 0.3, 0] }}
+                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
+                />
+
+                {/* 2. The Core Line */}
+                <motion.path
+                  d={p.d}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                  fill="none"
                   initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
                   animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
                   transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
