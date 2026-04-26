@@ -47,7 +47,7 @@ export default function LoginScreen() {
   ];
 
   return (
-    <div className="h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-[#050505]">
+    <div className="h-[100dvh] w-full flex items-center justify-center p-4 relative overflow-hidden bg-[#050505]">
 
       {/* Radial Gradient Ambient Background */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,#111_0%,#050505_100%)] pointer-events-none" />
@@ -58,7 +58,7 @@ export default function LoginScreen() {
           <defs>
             {/* Subtle Grid Pattern */}
             <pattern id="blueprint-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4" />
             </pattern>
 
             <filter id="glow-strong" x="-20%" y="-20%" width="140%" height="140%">
