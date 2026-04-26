@@ -27,97 +27,110 @@ export default function LoginScreen() {
     await loginUser(username);
   }
 
-  // DESKTOP: Left and Right ambient cables
-  const desktopPaths = [
-    { d: "M-100 200 C 200 200, 400 100, 720 450", duration: 4.5, delay: 0 },
-    { d: "M-100 600 C 300 700, 500 800, 720 450", duration: 5.2, delay: 1.5 },
-    { d: "M-100 400 C 200 600, 500 300, 720 450", duration: 3.8, delay: 0.5 },
-    { d: "M-100 800 C 300 800, 400 400, 720 450", duration: 6.0, delay: 2.5 },
-    { d: "M1540 200 C 1240 200, 1040 100, 720 450", duration: 4.8, delay: 0.8 },
-    { d: "M1540 600 C 1140 700, 940 800, 720 450", duration: 5.5, delay: 0.2 },
-    { d: "M1540 400 C 1240 600, 940 300, 720 450", duration: 4.2, delay: 1.8 },
-    { d: "M1540 800 C 1140 800, 1040 400, 720 450", duration: 6.3, delay: 1.2 },
-  ];
+  // Cyber-Grid / Blueprint Paths converging on the center (720, 450)
+  const circuitPaths = [
+    // Outer Desktop
+    { d: "M-100 150 L 300 150 L 450 300 L 450 450 L 720 450", color: "#6189ff", duration: 6, delay: 0 },
+    { d: "M-100 750 L 300 750 L 450 600 L 450 450 L 720 450", color: "#8b5cf6", duration: 7, delay: 1.2 },
+    { d: "M 150 -100 L 150 200 L 300 350 L 720 350 L 720 450", color: "#10b981", duration: 6.5, delay: 0.5 },
+    { d: "M 150 1000 L 150 700 L 300 550 L 720 550 L 720 450", color: "#f43f5e", duration: 5.8, delay: 2.1 },
+    { d: "M 1540 150 L 1140 150 L 990 300 L 990 450 L 720 450", color: "#06b6d4", duration: 6.2, delay: 0.8 },
+    { d: "M 1540 750 L 1140 750 L 990 600 L 990 450 L 720 450", color: "#f59e0b", duration: 7.2, delay: 1.5 },
+    { d: "M 1290 -100 L 1290 200 L 1140 350 L 720 350 L 720 450", color: "#6189ff", duration: 5.5, delay: 2.5 },
+    { d: "M 1290 1000 L 1290 700 L 1140 550 L 720 550 L 720 450", color: "#8b5cf6", duration: 6.8, delay: 0.3 },
 
-  // MOBILE: Top and Bottom ambient cables
-  const mobilePaths = [
-    { d: "M300 -100 C 400 200, 600 100, 720 450", duration: 4.5, delay: 0 },
-    { d: "M720 -100 C 800 150, 600 300, 720 450", duration: 5.2, delay: 1.5 },
-    { d: "M1140 -100 C 1040 200, 840 100, 720 450", duration: 3.8, delay: 0.5 },
-    { d: "M300 1000 C 400 700, 600 800, 720 450", duration: 4.8, delay: 0.8 },
-    { d: "M720 1000 C 600 750, 800 600, 720 450", duration: 5.5, delay: 0.2 },
-    { d: "M1140 1000 C 1040 700, 840 800, 720 450", duration: 4.2, delay: 1.8 },
+    // Inner Mobile-friendly
+    { d: "M 500 -100 L 500 250 L 650 400 L 720 400 L 720 450", color: "#10b981", duration: 4.2, delay: 0.5 },
+    { d: "M 500 1000 L 500 650 L 650 500 L 720 500 L 720 450", color: "#f43f5e", duration: 5.1, delay: 1.8 },
+    { d: "M 940 -100 L 940 250 L 790 400 L 720 400 L 720 450", color: "#06b6d4", duration: 4.6, delay: 1.1 },
+    { d: "M 940 1000 L 940 650 L 790 500 L 720 500 L 720 450", color: "#f59e0b", duration: 5.4, delay: 2.7 },
   ];
 
   return (
     <div className="h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-[#050505]">
 
+      {/* Radial Gradient Ambient Background */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,#111_0%,#050505_100%)] pointer-events-none" />
+
       {/* Dynamic Energy Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
         <svg className="w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-          {/* DESKTOP PATHS */}
-          <g className="hidden md:block">
-            {desktopPaths.map((p, i) => (
-              <g key={`desktop-${i}`}>
-                {/* Static background track */}
-                <path d={p.d} stroke="#262626" strokeWidth="1.5" fill="none" className="opacity-40" />
+          <defs>
+            {/* Subtle Grid Pattern */}
+            <pattern id="blueprint-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
+            </pattern>
 
-                {/* 1. The Glow (Thick, semi-transparent) */}
-                <motion.path
-                  d={p.d}
-                  stroke="#6189ff"
-                  strokeWidth="12"
-                  fill="none"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  animate={{ pathOffset: 1, opacity: [0, 0.3, 0.3, 0] }}
-                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
-                />
+            <filter id="glow-strong" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
 
-                {/* 2. The Core Line (Thin, bright) */}
-                <motion.path
-                  d={p.d}
-                  stroke="#ffffff"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
-                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
-                />
-              </g>
-            ))}
-          </g>
+          {/* Grid Background */}
+          <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
 
-          {/* MOBILE PATHS */}
-          <g className="md:hidden">
-            {mobilePaths.map((p, i) => (
-              <g key={`mobile-${i}`}>
-                {/* Static background track */}
-                <path d={p.d} stroke="#262626" strokeWidth="1.5" fill="none" className="opacity-40" />
+          {/* Pulsing Central Rings */}
+          <motion.circle
+            cx="720" cy="450"
+            stroke="#6189ff" strokeWidth="1" fill="none"
+            initial={{ r: 100, opacity: 0 }}
+            animate={{ r: 400, opacity: [0, 0.4, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }}
+          />
+          <motion.circle
+            cx="720" cy="450"
+            stroke="#8b5cf6" strokeWidth="1" fill="none"
+            initial={{ r: 100, opacity: 0 }}
+            animate={{ r: 450, opacity: [0, 0.3, 0] }}
+            transition={{ duration: 5, delay: 1.5, repeat: Infinity, ease: "easeOut" }}
+          />
 
-                {/* 1. The Glow */}
-                <motion.path
-                  d={p.d}
-                  stroke="#6189ff"
-                  strokeWidth="12"
-                  fill="none"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  animate={{ pathOffset: 1, opacity: [0, 0.3, 0.3, 0] }}
-                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
-                />
+          {/* Circuit Paths */}
+          {circuitPaths.map((p, i) => (
+            <g key={`circuit-${i}`}>
+              {/* Static background track */}
+              <path d={p.d} stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinejoin="bevel" />
 
-                {/* 2. The Core Line */}
-                <motion.path
-                  d={p.d}
-                  stroke="#ffffff"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
-                  transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
-                />
-              </g>
-            ))}
-          </g>
+              {/* Energy Trail (Thick, colored glow) */}
+              <motion.path
+                d={p.d}
+                stroke={p.color}
+                strokeWidth="6"
+                fill="none"
+                filter="url(#glow-strong)"
+                strokeLinecap="round"
+                strokeLinejoin="bevel"
+                initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
+                transition={{
+                  pathOffset: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear", times: [0, 0.1, 0.9, 1] }
+                }}
+              />
+
+              {/* Core Highlight (Thin, bright white) */}
+              <motion.path
+                d={p.d}
+                stroke="#ffffff"
+                strokeWidth="2"
+                fill="none"
+                filter="url(#glow-subtle)"
+                strokeLinecap="round"
+                strokeLinejoin="bevel"
+                initial={{ pathLength: 0.05, pathOffset: 0, opacity: 0 }}
+                animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
+                transition={{
+                  pathOffset: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear", times: [0, 0.1, 0.9, 1] }
+                }}
+              />
+            </g>
+          ))}
         </svg>
       </div>
 
