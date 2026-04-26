@@ -27,9 +27,8 @@ export default function LoginScreen() {
     await loginUser(username);
   }
 
-  // Cyber-Grid / Blueprint Paths converging on the center (720, 450)
-  const circuitPaths = [
-    // Outer Desktop
+  // DESKTOP: Widescreen ViewBox (1440x900), converging on (720, 450)
+  const desktopPaths = [
     { d: "M-100 150 L 300 150 L 450 300 L 450 450 L 720 450", color: "#6189ff", duration: 6, delay: 0 },
     { d: "M-100 750 L 300 750 L 450 600 L 450 450 L 720 450", color: "#8b5cf6", duration: 7, delay: 1.2 },
     { d: "M 150 -100 L 150 200 L 300 350 L 720 350 L 720 450", color: "#10b981", duration: 6.5, delay: 0.5 },
@@ -38,41 +37,48 @@ export default function LoginScreen() {
     { d: "M 1540 750 L 1140 750 L 990 600 L 990 450 L 720 450", color: "#f59e0b", duration: 7.2, delay: 1.5 },
     { d: "M 1290 -100 L 1290 200 L 1140 350 L 720 350 L 720 450", color: "#6189ff", duration: 5.5, delay: 2.5 },
     { d: "M 1290 1000 L 1290 700 L 1140 550 L 720 550 L 720 450", color: "#8b5cf6", duration: 6.8, delay: 0.3 },
+  ];
 
-    // Inner Mobile-friendly
-    { d: "M 500 -100 L 500 250 L 650 400 L 720 400 L 720 450", color: "#10b981", duration: 4.2, delay: 0.5 },
-    { d: "M 500 1000 L 500 650 L 650 500 L 720 500 L 720 450", color: "#f43f5e", duration: 5.1, delay: 1.8 },
-    { d: "M 940 -100 L 940 250 L 790 400 L 720 400 L 720 450", color: "#06b6d4", duration: 4.6, delay: 1.1 },
-    { d: "M 940 1000 L 940 650 L 790 500 L 720 500 L 720 450", color: "#f59e0b", duration: 5.4, delay: 2.7 },
+  // MOBILE: Portrait ViewBox (600x1200), converging on (300, 600)
+  const mobilePaths = [
+    { d: "M -100 200 L 150 200 L 150 600 L 300 600", color: "#6189ff", duration: 6, delay: 0 },
+    { d: "M 700 300 L 450 300 L 450 600 L 300 600", color: "#8b5cf6", duration: 7, delay: 1.2 },
+    { d: "M -100 1000 L 150 1000 L 150 600 L 300 600", color: "#10b981", duration: 6.5, delay: 0.5 },
+    { d: "M 700 900 L 450 900 L 450 600 L 300 600", color: "#f43f5e", duration: 5.8, delay: 2.1 },
+    { d: "M 150 -100 L 150 350 L 300 350 L 300 600", color: "#06b6d4", duration: 6.2, delay: 0.8 },
+    { d: "M 450 1300 L 450 850 L 300 850 L 300 600", color: "#f59e0b", duration: 7.2, delay: 1.5 },
+    { d: "M 450 -100 L 450 250 L 300 250 L 300 600", color: "#6189ff", duration: 5.5, delay: 2.5 },
+    { d: "M 150 1300 L 150 950 L 300 950 L 300 600", color: "#8b5cf6", duration: 6.8, delay: 0.3 },
   ];
 
   return (
-    <div className="h-[100dvh] w-full flex items-center justify-center p-4 relative overflow-hidden bg-[#050505]">
+    <div className="h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-[#050505]">
 
       {/* Radial Gradient Ambient Background */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,#111_0%,#050505_100%)] pointer-events-none" />
 
       {/* Dynamic Energy Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-        <svg className="w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        {/* DESKTOP SVG */}
+        <svg className="hidden md:block w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
           <defs>
             {/* Subtle Grid Pattern */}
-            <pattern id="blueprint-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4" />
+            <pattern id="blueprint-grid-desktop" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
             </pattern>
 
-            <filter id="glow-strong" x="-20%" y="-20%" width="140%" height="140%">
+            <filter id="glow-strong-desktop" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="8" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
-            <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+            <filter id="glow-subtle-desktop" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
           {/* Grid Background */}
-          <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
+          <rect width="100%" height="100%" fill="url(#blueprint-grid-desktop)" />
 
           {/* Pulsing Central Rings */}
           <motion.circle
@@ -91,8 +97,8 @@ export default function LoginScreen() {
           />
 
           {/* Circuit Paths */}
-          {circuitPaths.map((p, i) => (
-            <g key={`circuit-${i}`}>
+          {desktopPaths.map((p, i) => (
+            <g key={`desktop-circuit-${i}`}>
               {/* Static background track */}
               <path d={p.d} stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinejoin="bevel" />
 
@@ -102,7 +108,7 @@ export default function LoginScreen() {
                 stroke={p.color}
                 strokeWidth="6"
                 fill="none"
-                filter="url(#glow-strong)"
+                filter="url(#glow-strong-desktop)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
@@ -119,7 +125,79 @@ export default function LoginScreen() {
                 stroke="#ffffff"
                 strokeWidth="2"
                 fill="none"
-                filter="url(#glow-subtle)"
+                filter="url(#glow-subtle-desktop)"
+                strokeLinecap="round"
+                strokeLinejoin="bevel"
+                initial={{ pathLength: 0.05, pathOffset: 0, opacity: 0 }}
+                animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
+                transition={{
+                  pathOffset: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear", times: [0, 0.1, 0.9, 1] }
+                }}
+              />
+            </g>
+          ))}
+        </svg>
+
+        {/* MOBILE SVG */}
+        <svg className="block md:hidden w-full h-full" viewBox="0 0 600 1200" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="blueprint-grid-mobile" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#262626" strokeWidth="0.5" strokeOpacity="0.4"/>
+            </pattern>
+            <filter id="glow-strong-mobile" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <filter id="glow-subtle-mobile" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <rect width="100%" height="100%" fill="url(#blueprint-grid-mobile)" />
+
+          <motion.circle
+            cx="300" cy="600"
+            stroke="#6189ff" strokeWidth="1" fill="none"
+            initial={{ r: 80, opacity: 0 }}
+            animate={{ r: 250, opacity: [0, 0.4, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }}
+          />
+          <motion.circle
+            cx="300" cy="600"
+            stroke="#8b5cf6" strokeWidth="1" fill="none"
+            initial={{ r: 80, opacity: 0 }}
+            animate={{ r: 300, opacity: [0, 0.3, 0] }}
+            transition={{ duration: 5, delay: 1.5, repeat: Infinity, ease: "easeOut" }}
+          />
+
+          {mobilePaths.map((p, i) => (
+            <g key={`mobile-circuit-${i}`}>
+              <path d={p.d} stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinejoin="bevel" />
+              
+              <motion.path
+                d={p.d}
+                stroke={p.color}
+                strokeWidth="6"
+                fill="none"
+                filter="url(#glow-strong-mobile)"
+                strokeLinecap="round"
+                strokeLinejoin="bevel"
+                initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                animate={{ pathOffset: 1, opacity: [0, 1, 1, 0] }}
+                transition={{
+                  pathOffset: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear", times: [0, 0.1, 0.9, 1] }
+                }}
+              />
+              
+              <motion.path
+                d={p.d}
+                stroke="#ffffff"
+                strokeWidth="2"
+                fill="none"
+                filter="url(#glow-subtle-mobile)"
                 strokeLinecap="round"
                 strokeLinejoin="bevel"
                 initial={{ pathLength: 0.05, pathOffset: 0, opacity: 0 }}
