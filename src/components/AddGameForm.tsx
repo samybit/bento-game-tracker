@@ -43,6 +43,26 @@ export default function AddGameForm() {
     return () => { active = false; };
   }, [title]);
 
+  // --- AI Chat Listener Effect ---
+  useEffect(() => {
+    const handleFill = (e: Event) => {
+      // Cast the generic Event to a CustomEvent to read your payload
+      const customEvent = e as CustomEvent<string>;
+
+      // Update the textarea with the AI's tasks
+      setAchievements(customEvent.detail);
+
+      // Clear any validation error automatically
+      setAchError('');
+    };
+
+    // Start listening when the component mounts
+    window.addEventListener('fill-achievements', handleFill);
+
+    // Clean up the listener when the component unmounts
+    return () => window.removeEventListener('fill-achievements', handleFill);
+  }, []);
+
   async function handleGetSuggestions() {
     if (showSuggestions) {
       setShowSuggestions(false);
