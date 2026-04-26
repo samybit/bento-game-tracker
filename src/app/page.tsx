@@ -8,7 +8,9 @@ import { logoutUser } from '@/app/actions';
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
-  const username = cookieStore.get('nexus_user')?.value;
+  const rawUsername = cookieStore.get('nexus_user')?.value;
+  // Decode the username to safely handle Arabic characters in metadata
+  const username = rawUsername ? decodeURIComponent(rawUsername) : null;
 
   // Unauthenticated users (and social scrapers like Upwork) see this rich metadata
   if (!username) {
@@ -54,7 +56,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const cookieStore = await cookies();
-  const username = cookieStore.get('nexus_user')?.value;
+  const rawUsername = cookieStore.get('nexus_user')?.value;
+  // Decode the username to safely handle Arabic characters in the UI
+  const username = rawUsername ? decodeURIComponent(rawUsername) : null;
 
   // Render gatekeeper if no cookie exists
   if (!username) {
