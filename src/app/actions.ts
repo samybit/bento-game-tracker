@@ -8,8 +8,10 @@ import { GoogleGenAI } from '@google/genai';
 // --- NEW AUTH ACTIONS ---
 export async function loginUser(username: string) {
   const cookieStore = await cookies();
-  // Store the username in a cookie for 1 year
-  cookieStore.set('nexus_user', username.trim().toLowerCase(), { maxAge: 60 * 60 * 24 * 365 });
+  // Encode the Arabic characters into a URL-safe ASCII string
+  const safeUsername = encodeURIComponent(username.trim().toLowerCase());
+  // Store for one year
+  cookieStore.set('nexus_user', safeUsername, { maxAge: 60 * 60 * 24 * 365 });
   revalidatePath('/');
 }
 
@@ -67,14 +69,17 @@ export async function searchGameImage(query: string): Promise<string | null> {
 }
 
 // --- Database Mutations ---
-
+// DECODE the cookie for language safety
 export async function addOrUpdateGame(title: string, achievementsText: string, imageUrl: string) {
   const cookieStore = await cookies();
-  const username = cookieStore.get('nexus_user')?.value;
+  const rawUsername = cookieStore.get('nexus_user')?.value;
 
-  if (!username) {
+  if (!rawUsername) {
     return { success: false, error: "Not logged in." };
   }
+
+  // Decode the URL-safe string back into readable Arabic text
+  const username = decodeURIComponent(rawUsername);
 
   // Normalize title spacing
   const cleanTitle = title.replace(/\s+/g, ' ').trim();

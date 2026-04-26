@@ -95,6 +95,7 @@ export default function AiChat() {
                   {/* Normal Text Chat Bubble */}
                   {textContent && (
                     <div
+                      dir="auto"
                       className={`p-3 text-sm rounded-lg ${msg.role === 'user'
                         ? 'bg-[#6189ff] text-white rounded-tr-none'
                         : 'bg-[#1a1a1a] border border-[#262626] text-gray-300 rounded-tl-none'

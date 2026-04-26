@@ -18,7 +18,7 @@ export default function LoginScreen() {
       setError('Identify yourself to access the board.');
       return;
     }
-    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    if (!/^[\p{L}\p{N}_-]+$/u.test(username)) {
       setError('No spaces or special characters allowed.');
       return;
     }
