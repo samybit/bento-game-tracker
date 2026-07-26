@@ -1,6 +1,7 @@
 // src/components/GameGrid.tsx
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { toggleAchievement, deleteGame } from '@/app/actions';
 import { Trash2, CheckCircle2, Circle, Image as ImageIcon, Check, X } from 'lucide-react';
@@ -64,7 +65,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
             <div className="flex justify-between items-start gap-3 mb-4 shrink-0 h-10">
               <div className="flex items-center gap-3 overflow-hidden">
                 {!isExpanded && game.imageUrl && (
-                  <img src={game.imageUrl} alt={game.title} className="w-10 h-10 rounded-md object-cover border border-gray-800 shrink-0" />
+                  <Image src={game.imageUrl} alt={game.title} width={40} height={40} unoptimized className="w-10 h-10 rounded-md object-cover border border-gray-800 shrink-0" />
                 )}
                 <h3 className={`font-bold text-gray-200 truncate ${isExpanded ? 'text-lg mt-1' : ''}`} title={game.title}>
                   {game.title}
@@ -121,7 +122,7 @@ export default function GameGrid({ games, isExpanded = false }: { games: Game[],
               {isExpanded ? (
                 <>
                   {game.imageUrl ? (
-                    <img src={game.imageUrl} alt={game.title} className="w-full h-32 object-cover rounded-t-xl border-b border-[#262626] shrink-0" />
+                    <Image src={game.imageUrl} alt={game.title} width={400} height={128} unoptimized className="w-full h-32 object-cover rounded-t-xl border-b border-[#262626] shrink-0" />
                   ) : (
                     <div className="w-full h-32 bg-[#121212] rounded-t-xl border-b border-[#262626] shrink-0 flex items-center justify-center">
                       <ImageIcon className="w-8 h-8 text-gray-700" />

@@ -1,6 +1,7 @@
 // src/components/AddGameForm.tsx
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { searchGameImage, addOrUpdateGame, getTrendingGames } from '@/app/actions';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,20 +27,18 @@ export default function AddGameForm() {
   // Existing CheapShark Effect...
   useEffect(() => {
     let active = true;
-    if (title.trim().length >= 3) {
-      setIsSearching(true);
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      debounceTimer.current = setTimeout(async () => {
-        const url = await searchGameImage(title);
-        if (active) {
-          setThumbnailUrl(url);
-          setIsSearching(false);
-        }
-      }, 800);
-    } else {
-      setThumbnailUrl(null);
-      setIsSearching(false);
-    }
+    if (title.trim().length < 3) return;
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(async () => {
+      if (active) setIsSearching(true);
+      const url = await searchGameImage(title);
+      if (active) {
+        setThumbnailUrl(url);
+        setIsSearching(false);
+      }
+    }, 800);
+
     return () => { active = false; };
   }, [title]);
 
@@ -118,7 +117,7 @@ export default function AddGameForm() {
             {isSearching ? (
               <span className="text-xs text-gray-500 animate-pulse">...</span>
             ) : thumbnailUrl ? (
-              <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover absolute inset-0" />
+              <Image src={thumbnailUrl} alt="Thumbnail" width={56} height={56} unoptimized className="w-full h-full object-cover absolute inset-0" />
             ) : (
               <span className="text-xs text-gray-700">Img</span>
             )}
@@ -131,7 +130,12 @@ export default function AddGameForm() {
               placeholder="Game Title..."
               value={title}
               onChange={(e) => {
-                setTitle(e.target.value);
+                const val = e.target.value;
+                setTitle(val);
+                if (val.trim().length < 3) {
+                  setThumbnailUrl(null);
+                  setIsSearching(false);
+                }
                 if (titleError) setTitleError('');
               }}
               // flex-1 allows it to grow, min-w-0 allows it to shrink below default input widths

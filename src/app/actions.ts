@@ -173,18 +173,18 @@ const CHAT_SYSTEM_INSTRUCTION = `You are a strict video game assistant. Your sol
 
 CRITICAL GUARDRAIL: You MUST NOT answer questions outside the domain of video games (e.g., cooking recipes, politics, general trivia, coding). If a user asks a non-gaming question in ANY language (including Arabic, English, etc.), you must politely decline and state that you are a Nexus Board assistant focused exclusively on gaming.
 
-When a user asks for achievements, a roadmap, or tasks to complete a game, you must separate your general advice from the actual tasks. 
-Provide your conversational advice and tips normally as text. 
-However, you MUST include the actual tasks/achievements as a strict JSON array of strings enclosed in a markdown JSON block.
+OUTPUT FORMAT INSTRUCTIONS:
+- Directly answer the user without printing any internal reasoning, scratchpad, analysis, or step-by-step thinking steps (do NOT write "1. Analyze the Request", "2. Information Retrieval", etc.).
+- When the user asks for achievements, a roadmap, or tasks to complete a game, you MUST include the actual tasks as a strict JSON array of strings enclosed in a markdown JSON block at the very end of your response.
+- The JSON array MUST contain ONLY plain strings representing each task/achievement. Do NOT use JSON objects or key-value pairs.
 
-Example:
-Some advice here.
+Example format:
+Here are the achievements for the game:
 \`\`\`json
-["Complete the tutorial", "Defeat the first boss", "Reach level 10"]
-\`\`\`
-Do NOT include bullet points or markdown styling inside the JSON strings.`;
+["Lending a Hand: Complete all optional Honor story missions", "Friends With Benefits: Complete a companion activity in camp", "It Was THIS Big!: Catch a fish weighing at least 19 lbs"]
+\`\`\``;
 
-// Fireworks AI fallback using fast light model (Llama 3.1 8B Instruct)
+// Fireworks AI fallback using DeepSeek V4 Flash model
 async function callFireworksAI(userMessage: string, history: { role: string; content: string }[]) {
   const apiKey = process.env.FIREWORKS_API_KEY;
   if (!apiKey) {
@@ -208,7 +208,7 @@ async function callFireworksAI(userMessage: string, history: { role: string; con
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
+      model: 'accounts/fireworks/models/deepseek-v4-flash',
       messages,
       temperature: 0.7,
       max_tokens: 1000
@@ -218,6 +218,9 @@ async function callFireworksAI(userMessage: string, history: { role: string; con
 
   if (!res.ok) {
     const errText = await res.text();
+    if (res.status === 401 || res.status === 404) {
+      throw new Error(`Invalid or unauthorized Fireworks API Key (HTTP ${res.status}). Please check FIREWORKS_API_KEY in .env.`);
+    }
     throw new Error(`Fireworks API error (${res.status}): ${errText}`);
   }
 
@@ -235,7 +238,7 @@ export async function sendChatMessage(userMessage: string, history: { role: stri
   if (!userMessage) return { error: "Message is required" };
 
   // 1. Try Gemini API if key is available
-  if (process.env.GEMINI_API_KEY) {
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim() !== '') {
     try {
       const formattedHistory = history.map(msg => ({
         role: msg.role === 'user' ? 'user' : 'model',
@@ -263,9 +266,10 @@ export async function sendChatMessage(userMessage: string, history: { role: stri
   try {
     const reply = await callFireworksAI(userMessage, history);
     return { reply };
-  } catch (fireworksError) {
+  } catch (fireworksError: unknown) {
     console.error("Fireworks AI Error:", fireworksError);
-    return { error: "Failed to connect to the AI services." };
+    const errorMessage = fireworksError instanceof Error ? fireworksError.message : "Failed to connect to the AI services.";
+    return { error: errorMessage };
   }
 }
 
