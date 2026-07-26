@@ -155,7 +155,7 @@ export default function AiChat() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Gemini for a roadmap..."
+            placeholder="Ask AI for a roadmap..."
             disabled={isLoading}
             className="flex-1 bg-transparent border border-[#262626] rounded-lg px-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#6189ff] disabled:opacity-50"
           />

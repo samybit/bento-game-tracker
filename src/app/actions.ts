@@ -36,7 +36,7 @@ export async function searchGameImage(query: string): Promise<string | null> {
     const res = await fetch(url, {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'NexusGameBoard/1.0 (nexus@example.com)'
       },
       cache: 'no-store'
     });
@@ -168,21 +168,8 @@ export async function toggleAchievement(id: number, currentStatus: boolean) {
   }
 }
 
-// --- Gemini AI Chat Action ---
-export async function sendChatMessage(userMessage: string, history: { role: string, content: string }[]) {
-  if (!userMessage) return { error: "Message is required" };
-
-  try {
-    // Map the simple history array to the format expected by the SDK
-    const formattedHistory = history.map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }]
-    }));
-
-    const chat = ai.chats.create({
-      model: 'gemini-2.5-flash-lite',
-      config: {
-        systemInstruction: `You are a strict video game assistant. Your sole purpose is to discuss video games, achievements, roadmaps, and gaming strategies.
+// --- AI Chat System Instruction ---
+const CHAT_SYSTEM_INSTRUCTION = `You are a strict video game assistant. Your sole purpose is to discuss video games, achievements, roadmaps, and gaming strategies.
 
 CRITICAL GUARDRAIL: You MUST NOT answer questions outside the domain of video games (e.g., cooking recipes, politics, general trivia, coding). If a user asks a non-gaming question in ANY language (including Arabic, English, etc.), you must politely decline and state that you are a Nexus Board assistant focused exclusively on gaming.
 
@@ -195,17 +182,90 @@ Some advice here.
 \`\`\`json
 ["Complete the tutorial", "Defeat the first boss", "Reach level 10"]
 \`\`\`
-Do NOT include bullet points or markdown styling inside the JSON strings.`,
-      },
-      history: formattedHistory
-    });
+Do NOT include bullet points or markdown styling inside the JSON strings.`;
 
-    const response = await chat.sendMessage({ message: userMessage });
+// Fireworks AI fallback using fast light model (Llama 3.1 8B Instruct)
+async function callFireworksAI(userMessage: string, history: { role: string; content: string }[]) {
+  const apiKey = process.env.FIREWORKS_API_KEY;
+  if (!apiKey) {
+    throw new Error("FIREWORKS_API_KEY environment variable is not set.");
+  }
 
-    return { reply: response.text };
-  } catch (error) {
-    console.error("Gemini Error:", error);
-    return { error: "Failed to connect to the AI." };
+  const messages = [
+    { role: 'system', content: CHAT_SYSTEM_INSTRUCTION },
+    ...history.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'assistant',
+      content: msg.content
+    })),
+    { role: 'user', content: userMessage }
+  ];
+
+  const res = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
+      messages,
+      temperature: 0.7,
+      max_tokens: 1000
+    }),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Fireworks API error (${res.status}): ${errText}`);
+  }
+
+  const data = await res.json();
+  const content = data.choices?.[0]?.message?.content;
+  if (!content) {
+    throw new Error("Fireworks API returned empty response.");
+  }
+
+  return content;
+}
+
+// --- Gemini AI Chat Action with Fireworks Fallback ---
+export async function sendChatMessage(userMessage: string, history: { role: string, content: string }[]) {
+  if (!userMessage) return { error: "Message is required" };
+
+  // 1. Try Gemini API if key is available
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const formattedHistory = history.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      }));
+
+      const chat = ai.chats.create({
+        model: 'gemini-2.5-flash-lite',
+        config: {
+          systemInstruction: CHAT_SYSTEM_INSTRUCTION,
+        },
+        history: formattedHistory
+      });
+
+      const response = await chat.sendMessage({ message: userMessage });
+      if (response.text) {
+        return { reply: response.text };
+      }
+    } catch (geminiError) {
+      console.warn("Gemini API call failed, falling back to Fireworks AI:", geminiError);
+    }
+  }
+
+  // 2. Fallback to Fireworks AI
+  try {
+    const reply = await callFireworksAI(userMessage, history);
+    return { reply };
+  } catch (fireworksError) {
+    console.error("Fireworks AI Error:", fireworksError);
+    return { error: "Failed to connect to the AI services." };
   }
 }
 

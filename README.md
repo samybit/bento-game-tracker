@@ -16,8 +16,8 @@ A high-performance, Bento-styled game completion board designed for focused game
 ### 1. Clone the Repository
 
 ```bash
-git clone [your-repo-url]
-cd nexus-board
+git clone [https://github.com/samybit/bento-game-tracker]
+cd bento-game-tracker
 ```
 
 ### 2. Install Dependencies
@@ -54,3 +54,7 @@ Open http://localhost:3000 in your browser.
 - **Smart Fill:** AI roadmaps sent directly to your tracker via custom events
 - **Bento UI:** Optimized 3-column desktop layout with locked viewport
 - **Fast Search:** Debounced game art fetching via CheapShark API
+
+## License
+
+MIT
